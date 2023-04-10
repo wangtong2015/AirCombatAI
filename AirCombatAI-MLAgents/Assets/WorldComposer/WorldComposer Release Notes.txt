@@ -1,0 +1,14 @@
+1.88: Fixed a GUILayout bug
+
+1.87: Fixed GUILayout issue and Obsolete/Deprecation warnings in Unity 2020+
+
+1.86: Fixed issues with tile downloads hanging
+
+Previous release notes can be found here:
+http://www.terraincomposer.com/worldcomposer-release-notes/
+
+If you experience any issues:
+* Discord Support: https://discord.gg/HhepjD9
+* Forum: http://forum.unity3d.com/threads/215485-WorldComposer-a-tool-to-create-real-World-AAA-quality-terrain 
+* Email: Nathaniel_Doldersum@Hotmail.com
+----------------------------------------------------------------------------------

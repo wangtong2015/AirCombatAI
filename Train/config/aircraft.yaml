@@ -1,0 +1,59 @@
+behaviors:
+  SingleAircraftAgent:
+    trainer_type: ppo
+    hyperparameters:
+      # 一次抽取多少条数据进行训练
+      batch_size: 1024
+      # 经验池大小
+      buffer_size: 10240
+      # 学习率
+      learning_rate: 0.0003
+      learning_rate_schedule: linear
+      # PPO-specific hyperparameters
+      # Replaces the "PPO-specific hyperparameters" section above
+      # β值，PPO参数，决定了新旧策略的差距大小
+      beta: 0.005
+      # 决定了策略的随机性，一般在前期应基于较大的随机有利于探索，后期随机减小
+      epsilon: 0.2
+      epsilon_schedule: linear
+      # agents更新估计值时依赖于当前值的多少，趋近于1时则靠近更新值，趋近于0靠近当前的估计值
+      lambd: 0.95
+      # 梯度下降过程中采样经验池的次数
+      num_epoch: 3
+    # Configuration of the neural network (common to PPO/SAC)
+    network_settings:
+
+      normalize: false
+      # 隐藏层神经网络单元个数
+      hidden_units: 256
+      # 隐藏层层数
+      num_layers: 2
+      # 可视化观察的编码类型，simple对应两层卷积神经网络，nature_cnn是三个卷积层，resnet是叠的复杂卷积层
+      vis_encode_type: simple
+      # 循环神经网络，注意：LSTM不适用于连续动作，离散动作可以获得更好的结果
+      memory:
+        # 需要记住的经验序列长度，越大记忆越久
+        sequence_length: 64
+        # 智能体保存的记忆大小，必须是2的倍数，且应与期望agent完成任务所需记住的信息量成正比
+        memory_size: 256
+    # 在强化训练中，目标就是要学习一种是奖励最大化的策略。在基础层面上将来是由环境给出的。然而我们很可能遇到鼓励探索的agent。我们可以让agent探索新的状态而获得奖励，而不是仅仅给予明确的奖励；我们还可以使用混合奖励信号来帮助学习过程。使用reward_signals可以定义奖励信号。ML-Agents默认提供三种奖励信号：外部奖励信号（环境给予）、好奇心奖励信号（鼓励探索）、GAIL奖励信号（对抗模仿学习）。
+    reward_signals:
+      # 环境奖励
+      extrinsic:
+        gamma: 0.99 # 奖励信号的衰减系数
+        strength: 1.0 # 奖励信号的强度，可以在训练过程中控制奖励信号的相对重要性。
+    # 训练中保留模型的数量
+    keep_checkpoints: 5
+    # 每收集多少经验数据保存一个模型数据，所有保留的模型都会以.onnx文件的形式保存
+    checkpoint_interval: 50000
+    # Trainer configurations common to all trainers
+    # 最大训练步数，达到后自动退出
+    max_steps: 20000000
+    # 在添加到经验池之前智能体要经过的步数，如果有频繁的奖励，可以设的小一些
+    time_horizon: 32
+    # 每经过多少步数在面板上显示统计数据
+    summary_freq: 1000
+    # 允许环境在更新模型时运行，当使用SAC时设为True有利于加速训练，但用Self Play时应设为False
+    threaded: false
+    # 之前保存的模型路径
+    init_path: null
